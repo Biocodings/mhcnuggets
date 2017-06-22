@@ -14,7 +14,7 @@ trained on the latest IEDB data are on the way.
 * MHCnuggets-Chunky-CNN
 
 ### Which model should I use? ###
-Here's a table to help you choose (evaluation on the Kim 2014 benchmark).
+Here's a table to help you decide! (evaluation on the Kim 2014 benchmark)
 Our personal recommendation is either the MHCnuggets-GRU or MHCnuggets-LSTM.
 MHCnuggets-FC is fine too but MHCnuggets-Chunky-CNN and MHCnuggets-Spanny-CNN
 are definitely a tier below the rest.
