@@ -16,7 +16,7 @@ import models
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import f1_score
 from scipy.stats import kendalltau
-from keras.optimizers import Adam, SGD
+from keras.optimizers import Adam
 import argparse
 
 

@@ -47,12 +47,20 @@ def standardize_mhc(mhc):
 
 def map_ic50_for_regression(ic50):
     '''
-    Map the ic50 between 0 or 1
+    Map the IC50 between 0 or 1
     '''
 
     if ic50 > MAX_IC50:
         ic50 = MAX_IC50
     return 1-math.log(ic50, MAX_IC50)
+
+
+def map_proba_to_ic50(proba):
+    '''
+    Map score outputs from the models to IC50s
+    '''
+
+    return MAX_IC50 ** (1-proba)
 
 
 def binarize_ic50(ic50):
