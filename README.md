@@ -40,10 +40,11 @@ Transfer learning is just as easy. For example, if we wanted to train the
 a model for HLA-A\*02:03 with weights that are learned from HLA-A\*02:01 instead of
 random initialization:
 ```bash
-python scripts/train.py -a HLA-A0203 -s test/HLA-A0203.h5 -n 100 -m lstm -d data/kim2014/train.csv -t test/HLA-A0201.h5
+python scripts/train.py -a HLA-A0203 -s test/HLA-A0203.h5 -n 25 -m lstm -d data/kim2014/train.csv -t test/HLA-A0201.h5
 ```
 Note that the model architectures used for transfer learning must be the same e.g. MHCnuggets-LSTM to MHCnuggets-LSTM.
-
+You also probably don't need as many epochs as when you're training from scratch, convergence with transfer learning
+is usually a lot faster.
 
 ### Predicting ###
 In order to predict for a set of peptides, provide the model name, the corresponding paths
