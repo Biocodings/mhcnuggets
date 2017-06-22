@@ -16,8 +16,13 @@ import math
 from keras.layers import Input
 from keras.layers import Conv1D, GlobalMaxPooling1D
 from aa_embeddings import MASK_VALUE
+
+# constants
 IC50_THRESHOLD = 500
 MAX_IC50 = 50000
+MAX_CUT_LEN = 9
+MAX_MASK_LEN = 11
+NUM_AAS = 21
 
 
 def get_predictions(test_peptides, model, binary=False, embed_peptides=None):
@@ -38,13 +43,15 @@ def get_predictions(test_peptides, model, binary=False, embed_peptides=None):
     return preds_cont, preds_bins
 
 
-def mhcnuggets_fc(input_size, hidden_size=64, output_size=1, dropout=0.8):
+def mhcnuggets_fc(input_size=(MAX_CUT_LEN, NUM_AAS),
+                  hidden_size=64, output_size=1, dropout=0.8):
     '''
-    Multi-layer perceptron
+    MHCnuggets-FC model
     -----------
-    input_size : Num dimensions of the encoding (21*len for amino acids)
+    input_size : Num dimensions of the encoding (9, 21) = (len, numAA)
     hidden_size : Num hidden dimensions
     output_size : Num of outputs
+    dropout : dropout probability to apply
     '''
 
     model = Sequential()
@@ -57,9 +64,10 @@ def mhcnuggets_fc(input_size, hidden_size=64, output_size=1, dropout=0.8):
     return model
 
 
-def mhcnuggets_lstm(input_size, hidden_size=64, output_size=1, dropout=0.2):
+def mhcnuggets_lstm(input_size=(MAX_MASK_LEN, NUM_AAS),
+                    hidden_size=64, output_size=1, dropout=0.2):
     '''
-    LSTM for neoantigen classification
+    MHCnuggets-LSTM model
     -----------
     input_size : Num dimensions of the encoding (11, 21) = (len, numAA)
     hidden_size : Num hidden dimensions
@@ -78,9 +86,10 @@ def mhcnuggets_lstm(input_size, hidden_size=64, output_size=1, dropout=0.2):
     return model
 
 
-def mhcnuggets_gru(input_size, hidden_size=64, output_size=1, dropout=0.2):
+def mhcnuggets_gru(input_size=(MAX_MASK_LEN, NUM_AAS),
+                   hidden_size=64, output_size=1, dropout=0.2):
     '''
-    LSTM for neoantigen classification
+    MHCnuggets-GRU model
     -----------
     input_size : Num dimensions of the encoding (11, 21) = (len, numAA)
     hidden_size : Num hidden dimensions
@@ -99,10 +108,11 @@ def mhcnuggets_gru(input_size, hidden_size=64, output_size=1, dropout=0.2):
     return model
 
 
-def mhcnuggets_spanny_cnn(input_size, hidden_size=64, output_size=1,
+def mhcnuggets_spanny_cnn(input_size=(MAX_CUT_LEN, NUM_AAS),
+                          hidden_size=64, output_size=1,
                           dropout=0.6, n_filters=1):
     '''
-    CNN for neoantigen classification
+    MHCnuggets-Spanny-CNN model
     -----------
     input_size : Num dimensions of the encoding (11, 21) = (len, numAA)
     hidden_size : Num hidden dimensions
@@ -131,10 +141,11 @@ def mhcnuggets_spanny_cnn(input_size, hidden_size=64, output_size=1,
     return model
 
 
-def mhcnuggets_chunky_cnn(input_size, hidden_size=64, output_size=1,
+def mhcnuggets_chunky_cnn(input_size=(MAX_CUT_LEN, NUM_AAS),
+                          hidden_size=64, output_size=1,
                           dropout=0.6, embed_size=16, n_filters=250):
     '''
-    CNN for neoantigen classification
+    MHCnuggets-Chunky-CNN model
     -----------
     input_size : Num dimensions of the encoding (11, 21) = (len, numAA)
     hidden_size : Num hidden dimensions

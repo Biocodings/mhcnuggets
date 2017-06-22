@@ -194,7 +194,6 @@ class Dataset():
 
         alleles, peptides, affinities = [], [], []
         m_affinities, b_affinities = [], []
-        n_affinities = []
 
         for i in range(len(self.alleles)):
             if self.alleles[i] == allele and (length is None or length == len(self.peptides[i])):
@@ -203,11 +202,9 @@ class Dataset():
                 affinities.append(self.affinities[i])
                 m_affinities.append(self.continuous_targets[i])
                 b_affinities.append(self.binary_targets[i])
-                if len(self.netmhcpan_preds) > 0:
-                    n_affinities.append(self.netmhcpan_preds[i])
 
         return Dataset(alleles, peptides, affinities,
-                       m_affinities, b_affinities, n_affinities)
+                       m_affinities, b_affinities)
 
     def cut_pad_peptides(self, max_len=9, padding_aa='X', padding_pos=6):
         '''
