@@ -20,14 +20,14 @@ from keras.optimizers import Adam, SGD
 import argparse
 
 
-def train(mhc, data, model, model_path, lr, n_epoch):
+def train(mhc, data, model, model_path, lr, n_epoch, transfer_path):
     '''
     Training protocol
     '''
 
     # print out options
-    print('Training\nMHC: %s\nData: %s\nModel: %s\nSave path: %s' %
-          (mhc, data, model, model_path))
+    print('Training\nMHC: %s\nData: %s\nModel: %s\nSave path: %s\nTransfer: %s' %
+          (mhc, data, model, model_path, transfer_path))
 
     # load training
     train_data = Dataset.from_csv(filename=data,
@@ -45,7 +45,7 @@ def train(mhc, data, model, model_path, lr, n_epoch):
     # get the allele specific data
     mhc_train = train_data.get_allele(mhc)
 
-    # define and compile model
+    # define model
     if model == 'fc':
         model = models.mhcnuggets_fc()
     elif model == 'gru':
@@ -56,9 +56,15 @@ def train(mhc, data, model, model_path, lr, n_epoch):
         model = models.mhcnuggets_chunky_cnn()
     elif model == 'spanny_cnn':
         model = models.mhcnuggets_spanny_cnn()
+
+    # check if we need to do transfer learning
+    if transfer_path:
+        model.load_weights(transfer_path)
+
+    # compile model
     model.compile(loss='mse', optimizer=Adam(lr=0.001))
 
-    # get tensorized values for testing/
+    # get tensorized values for training
     train_peptides, train_continuous, train_binary = mhc_train.tensorize_keras(embed_type='softhot')
 
     # convergence criterion
@@ -124,6 +130,10 @@ def parse_args():
                         type=float, default=0.001,
                         help='Learning rate')
 
+    parser.add_argument('-t', '--transfer_weights',
+                        type=str, default=None,
+                        help='Path to transfer weights from')
+
     args = parser.parse_args()
     return vars(args)
 
@@ -135,7 +145,7 @@ def main():
 
     opts = parse_args()
     train(opts['allele'], opts['data'], opts['model'], opts['save_path'],
-          opts['learning_rate'], opts['num_epoch'])
+          opts['learning_rate'], opts['num_epoch'], opts['transfer_weights'])
 
 
 if __name__ == '__main__':
