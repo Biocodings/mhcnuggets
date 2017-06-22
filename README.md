@@ -13,13 +13,14 @@ trained on the latest IEDB data are on the way.
 * MHCnuggets-Chunky-CNN
 * MHCnuggets-Spanny-CNN
 
-
+Training a model is simple. For example, to train a MHCnuggets-LSTM model
+for 100 epochs on the Kim dataset for HLA-A*02:03 and save it to test/tmp.h5:
 ```bash
-python
+python scripts/train.py -a HLA-A0203 -s test/tmp.h5 -n 100 -m lstm -d data/kim2014/train.csv
 ```
 
-First Header  | Second Header
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell
 
+### Requirements ###
+* Keras w/ Theano or Tensorflow backend
+* Numpy
+* Scipy
