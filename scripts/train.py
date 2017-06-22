@@ -104,7 +104,7 @@ def parse_args():
     parser.add_argument('-d', '--data',
                         type=str, default='data/kim2014/train.csv',
                         help=('Data file to use for training, should ' +
-                              'be tsv or csv files w/ formatting similar to ' +
+                              'be csv files w/ formatting similar to ' +
                               'data/kim2014/train.csv'))
 
     parser.add_argument('-a', '--allele',

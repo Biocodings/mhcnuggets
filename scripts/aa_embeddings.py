@@ -8,7 +8,7 @@ rohit.bhattachar@gmail.com
 from __future__ import print_function
 import numpy as np
 
-MASK_VALUE = -42
+MASK_VALUE = -4200000
 AA_LIST = list('ACDEFGHIKLMNPQRSTVWYX')
 CAN_AA_LIST = list('ACDEFGHIKLMNPQRSTVWY')
 
@@ -31,7 +31,7 @@ for aa in AA_VOCAB:
     filler = (1-0.9)/(len(AA_LIST)-1)
     AA_SOFTHOT[aa] = [filler]*len(AA_LIST)
     AA_SOFTHOT[aa][AA_VOCAB[aa]] = 0.9
-AA_SOFTHOT['Z'] = [MASK_VALUE] * len(AA_LIST)
+AA_SOFTHOT['Z'] = [-42] * len(AA_LIST)
 
 AA_VOCAB = {aa: i+1 for i, aa in enumerate(AA_LIST)}
 AA_VOCAB['Z'] = 0

@@ -13,6 +13,21 @@ trained on the latest IEDB data are on the way.
 * MHCnuggets-Spanny-CNN
 * MHCnuggets-Chunky-CNN
 
+### Which model should I use? ###
+Here's a table to help you choose (evaluation on the Kim 2014 benchmark).
+Our personal recommendation is either the MHCnuggets-GRU or MHCnuggets-LSTM.
+MHCnuggets-FC is fine too but MHCnuggets-Chunky-CNN and MHCnuggets-Spanny-CNN
+are definitely a tier below the rest.
+
+Method                 | AUC   | F1    | K-Tau
+-----------------------| ----  | ------| -----
+MHCnuggets-GRU         | 0.931 | 0.810 | 0.589
+MHCnuggets-LSTM        | 0.931 | 0.806 | 0.587
+MHCnuggets-FC          | 0.931 | 0.814 | 0.581
+MHCnuggets-Spanny-CNN  | 0.918 | 0.795 | 0.563
+MHCnuggets-Chunky-CNN  | 0.845 | 0.640 | 0.447
+
+
 ### Training ###
 Training a model is simple. For example, to train a MHCnuggets-LSTM model
 for 100 epochs on the Kim dataset for HLA-A\*02:01 and save it to test/tmp.h5:
@@ -37,6 +52,11 @@ to the trained weights, and the file containing new line separated peptides:
 python scripts/predict.py -m lstm -w saves/kim2014/mhcnuggets_lstm/HLA-A0203.h5 -p test/test_peptides.peps
 ```
 
+### Evaluation ###
+Evaluation of the performance of a model can be performed by:
+```bash
+python scripts/evaluate.py -a HLA-A0201 -m lstm -s saves/kim2014/mhcnuggets_lstm/HLA-A0201.h5
+```
 
 ### Requirements ###
 * Keras w/ Theano or Tensorflow backend
