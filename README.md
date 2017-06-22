@@ -44,7 +44,7 @@ python scripts/train.py -a HLA-A0203 -s test/HLA-A0203.h5 -n 25 -m lstm -d data/
 ```
 Note that the model architectures used for transfer learning must be the same e.g. MHCnuggets-LSTM to MHCnuggets-LSTM.
 You also probably don't need as many epochs as when you're training from scratch, convergence with transfer learning
-is usually a lot faster.
+is usually a lot faster particularly when sharing weights between closely related alleles like the example here.
 
 ### Predicting ###
 In order to predict for a set of peptides, provide the model name, the corresponding paths
