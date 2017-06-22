@@ -53,9 +53,9 @@ python scripts/predict.py -m lstm -w saves/kim2014/mhcnuggets_lstm/HLA-A0203.h5 
 ```
 
 ### Evaluation ###
-Evaluation of the performance of a model can be performed by:
+Evaluation of the performance of a model on a dataset (Kim 2014 here) can be performed by:
 ```bash
-python scripts/evaluate.py -a HLA-A0201 -m lstm -s saves/kim2014/mhcnuggets_lstm/HLA-A0201.h5
+python scripts/evaluate.py -a HLA-A0201 -m lstm -s saves/kim2014/mhcnuggets_lstm/HLA-A0201.h5 -d data/kim2014/test.csv
 ```
 
 ### Requirements ###
