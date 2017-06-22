@@ -1,0 +1,158 @@
+'''
+Training a GRU model
+
+Rohit Bhattacharya
+rohit.bhattachar@gmail.com
+'''
+
+from __future__ import print_function
+from dataset import Dataset
+import numpy as np
+import os
+from keras_models import get_predictions
+import keras_models
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import f1_score
+from scipy.stats import kendalltau
+from keras.optimizers import Adam, SGD
+import argparse
+
+
+# various paths/constants probably need to be moved
+# somewhere more useful
+DATA_DIR = 'data/kim2014'
+WEIGHTS_DIR = 'saves/lstm_finetune_weights/'
+TRAIN_PATH = os.path.join(DATA_DIR, 'train.tsv')
+TEST_PATH = os.path.join(DATA_DIR, 'test.csv')
+MAX_LEN = 11
+NUM_AAS = 21  # including pad X
+#NUM_EPOCH = 100
+NUM_EPOCH = 25
+NUM_HIDDEN = 64
+BATCH_SIZE = 32
+LR = 0.001
+BETA = 0.9
+np.random.seed(1437)  # for reproducibility
+
+
+def tune(mhc, tune_mhc):
+    '''
+    Training protocol
+    '''
+
+    # load training and testing data
+    train_data = Dataset.from_csv(filename=TRAIN_PATH,
+                                  sep='\t',
+                                  allele_column_name='mhc',
+                                  peptide_column_name='sequence',
+                                  affinity_column_name='meas')
+
+    test_data = Dataset.from_csv(filename=TEST_PATH,
+                                 sep=',',
+                                 allele_column_name='allele',
+                                 peptide_column_name='peptide',
+                                 affinity_column_name='meas')
+
+
+    # apply masking to same length
+    train_data.mask_peptides()
+    test_data.mask_peptides()
+
+    print('Training', mhc)
+
+    # define the path to save weights
+    model_path = os.path.join(WEIGHTS_DIR, mhc + '.h5')
+    pre_load_path = os.path.join(WEIGHTS_DIR, '%s.h5' % tune_mhc)
+
+    # get the allele specific data
+    mhc_train = train_data.get_allele(mhc)
+    mhc_test = test_data.get_allele(mhc)
+
+    # make model
+    model = keras_models.LSTM_(input_size=(MAX_LEN, NUM_AAS))
+    model.load_weights(pre_load_path)
+    model.compile(loss='mse', optimizer=Adam(lr=0.001))
+
+    # get tensorized values for testing/
+    train_peptides, train_continuous, train_binary = mhc_train.tensorize_keras(embed_type='softhot')
+    test_peptides, test_continuous, test_binary = mhc_test.tensorize_keras(embed_type='softhot')
+
+    # convergence criterion
+    highest_f1 = -1
+    lowest_bc = 1000
+
+    for epoch in range(NUM_EPOCH):
+
+        # train
+        model.fit(train_peptides, train_continuous, epochs=1, verbose=0)
+
+        # test model
+        preds_continuous, preds_binary = get_predictions(test_peptides, model)
+        train_preds_cont, train_preds_bin = get_predictions(train_peptides, model)
+        train_f1 = f1_score(train_binary, train_preds_bin)
+
+        # convergence
+        if train_f1 > highest_f1:
+
+            highest_f1 = train_f1
+            best_continuous = preds_continuous
+            best_binary = preds_binary
+            best_epoch = epoch
+            model.save_weights(model_path)
+
+        try:
+            auc = roc_auc_score(test_binary, preds_continuous)
+            f1 = f1_score(test_binary, preds_binary)
+            ktau = kendalltau(test_continuous, preds_continuous)[0]
+            print ('Epoch %d: AUC: %.4f, F1: %.4f, KTAU: %.4f' % (epoch,
+                                                                 auc,
+                                                                 f1,
+                                                                 ktau))
+        except ValueError as e:
+            print (e)
+            continue
+
+
+    try:
+        auc = roc_auc_score(test_binary, best_continuous)
+        f1 = f1_score(test_binary, best_binary)
+        ktau = kendalltau(test_continuous, preds_continuous)[0]
+        print ('Best epoch %d: AUC: %.4f, F1: %.4f, KTAU: %.4f' % (best_epoch,
+                                                                  auc,
+                                                                  f1,
+                                                                  ktau))
+    except ValueError as e:
+        print (e)
+
+
+def parse_args():
+    '''
+    Parse user arguments
+    '''
+
+    info = 'Train an RNN on an MHC from kim 2014 data'
+    parser = argparse.ArgumentParser(description=info)
+
+    parser.add_argument('-m', '--train_mhc',
+                        type=str, required=True,
+                        help='MHC molecule to train on')
+
+    parser.add_argument('-t', '--tune_mhc',
+                        type=str, required=True,
+                        help='MHC molecule to tune with')
+
+    args = parser.parse_args()
+    return vars(args)
+
+
+def main():
+    '''
+    Main function
+    '''
+
+    opts = parse_args()
+    tune(opts['train_mhc'], opts['tune_mhc'])
+
+
+if __name__ == '__main__':
+    main()
