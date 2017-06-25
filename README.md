@@ -3,7 +3,7 @@
 This repository contains scripts for training and making
 predictions using the MHCnuggets models! It also
 contains the pre-trained models for the Kim 2014 benchmark
-as seen in the MHCnuggets paper (link). Production models
+as seen in the [MHCnuggets paper](http://biorxiv.org/content/early/2017/06/23/154757). Production models
 trained on the latest IEDB data are on the way.
 
 ### Currently available models ###
@@ -63,3 +63,7 @@ python scripts/evaluate.py -a HLA-A0201 -m lstm -s saves/kim2014/mhcnuggets_lstm
 * Keras w/ Theano or Tensorflow backend
 * Numpy
 * Scipy
+
+### Citing ###
+If you find this work useful, you can cite our work
+[Prediction of peptide binding to MHC Class I proteins in the age of deep learning](http://biorxiv.org/content/early/2017/06/23/154757)
