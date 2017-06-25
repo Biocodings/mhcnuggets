@@ -64,6 +64,6 @@ python scripts/evaluate.py -a HLA-A0201 -m lstm -s saves/kim2014/mhcnuggets_lstm
 * Numpy
 * Scipy
 
-### Citing ###
+### Citing MHCnuggets ###
 If you find this work useful, you can cite our work
-[Prediction of peptide binding to MHC Class I proteins in the age of deep learning](http://biorxiv.org/content/early/2017/06/23/154757)
+[Prediction of peptide binding to MHC Class I proteins in the age of deep learning](http://biorxiv.org/content/early/2017/06/23/154757) .
