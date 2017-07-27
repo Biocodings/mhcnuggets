@@ -308,12 +308,28 @@ def main():
                                  peptide_column_name='peptide',
                                  affinity_column_name='IC50(nM)')
 
+    production_data = Dataset.from_csv(filename='data/production/curated_training_data.csv',
+                                       sep=',',
+                                       allele_column_name='mhc',
+                                       peptide_column_name='peptide',
+                                       affinity_column_name='IC50(nM)')
+
     print('Num train loaded:', len(train_data.alleles))
     print('Num train alleles:', len(set(train_data.alleles)))
     print('Num test loaded:', len(test_data.alleles))
     print('Num test alleles:', len(set(test_data.alleles)))
-    print(set(train_data.alleles))
-    print(set(test_data.alleles))
+    print('Num production loaded:', len(production_data.alleles))
+    print('Num production alleles:', len(set(production_data.alleles)))
+    print(sorted(set(train_data.alleles)))
+    print(sorted(set(test_data.alleles)))
+    print(sorted(set(production_data.alleles)))
+
+    # write supported production alleles to file
+    allele_file = open('data/production/supported_alleles.txt', 'w')
+    for mhc in sorted(set(production_data.alleles)):
+        allele_file.write(mhc + '\n')
+
+    allele_file.close()
 
 
 if __name__ == '__main__':
