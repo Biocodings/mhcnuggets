@@ -30,7 +30,7 @@ MHCnuggets-Chunky-CNN  | 0.845 | 0.640 | 0.447
 
 ### Training ###
 Training a model is simple. For example, to train a MHCnuggets-LSTM model
-for 100 epochs on the Kim dataset for HLA-A\*02:01 and save it to test/tmp.h5:
+for 100 epochs on the Kim dataset for HLA-A\*02:01 and save it to test/HLA-A0201.h5:
 ```bash
 python scripts/train.py -a HLA-A0201 -s test/HLA-A0201.h5 -n 100 -m lstm -d data/kim2014/train.csv
 ```
