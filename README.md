@@ -3,19 +3,20 @@
 This repository contains scripts for training and making
 predictions using the MHCnuggets models! It also
 contains the pre-trained models for the Kim 2014 benchmark
-as seen in the [MHCnuggets paper](http://biorxiv.org/content/early/2017/06/23/154757). Production models
-trained on the latest IEDB data are on the way.
+as seen in the [MHCnuggets paper](http://www.biorxiv.org/content/early/2017/07/27/154757).
+Trained production models are also available under the saves directory for MHCnuggets
+and MHCnuggets-Beta.
 
 ### Currently available models ###
-* MHCnuggets-LSTM
-* MHCnuggets-GRU
+* MHCnuggets-GRU (MHCnuggets)
+* MHCnuggets-LSTM (MHCnuggets-Beta)
 * MHCnuggets-FC
 * MHCnuggets-Spanny-CNN
 * MHCnuggets-Chunky-CNN
 
 ### Which model should I use? ###
 Here's a table to help you decide! (evaluation on the Kim 2014 benchmark)
-Our personal recommendation is either the MHCnuggets-GRU or MHCnuggets-LSTM.
+Our personal recommendation is either the MHCnuggets or MHCnuggets-Beta.
 MHCnuggets-FC is fine too but MHCnuggets-Chunky-CNN and MHCnuggets-Spanny-CNN
 are definitely a tier below the rest.
 
@@ -66,4 +67,4 @@ python scripts/evaluate.py -a HLA-A0201 -m lstm -s saves/kim2014/mhcnuggets_lstm
 
 ### Citing MHCnuggets ###
 If you find this work useful, you can cite our work:
-[Prediction of peptide binding to MHC Class I proteins in the age of deep learning](http://biorxiv.org/content/early/2017/06/23/154757).
+[Evaluation of machine learning methods to predict peptide binding to MHC Class I proteins](http://www.biorxiv.org/content/early/2017/07/27/154757).
